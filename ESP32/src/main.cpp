@@ -1,12 +1,15 @@
 /*接线
- * ST7920/LCD12864---arduino uno
- * VCC-------------5V
- * GND-------------GND
- * PSB----------------GND//低电平使用并口
- * E------------------18
- * R/W----------------23
- * R/S----------------5
- * RST----------------22
+ * SSD1309/OLED128X64---NODE MCU32/arduino iic
+ * OLED VCC----------------3.3v
+ * GND---------------------GND
+ * OLED SCL----------------5
+ * OLED SDA----------------23
+ * Other-------------------NODE MCU32/arduino iic
+ * Beep--------------------19
+ * BUTTON_A----------------12
+ * BUTTON_B----------------14
+ * BUTTON_C----------------27
+ * BUTTON_D----------------26
  */
 
 #include <Arduino.h>
@@ -26,15 +29,15 @@
 #include <Wire.h>
 #endif
 
-U8G2_ST7920_128X64_2_SW_SPI u8g2(U8G2_R0, /* E=*/18, /* RW=*/23, /* RS=*/5, /* RST=*/22); // ESP32
+U8G2_SSD1309_128X64_NONAME2_2_SW_I2C u8g2(U8G2_R0, /* SCL=*/ 5, /* SDA=*/ 18, /* RST=*/ U8X8_PIN_NONE);
 
-#define BUTTON_A_PIN 13
-#define BUTTON_B_PIN 12
-#define BUTTON_C_PIN 14
-#define BUTTON_D_PIN 27
+#define BUTTON_A_PIN 12
+#define BUTTON_B_PIN 14
+#define BUTTON_C_PIN 27
+#define BUTTON_D_PIN 26
 Button2 buttonA, buttonB, buttonC, buttonD;
 WiFiClient client;
-int beep = 33;
+int beep = 19;
 char *message = "欢迎使用求助机";
 
 char connect()
@@ -52,11 +55,13 @@ char connect()
 	if (WiFi.status() != WL_CONNECTED)
 	{
 		Serial.println("无法连接，请检查密码");
+    message = "无法连接，请检查密码";
 		return 0;
 	}
 	else
 	{
 		Serial.println("WIFI连接成功！");
+    message = "WIFI连接成功！";
 		Serial.println(WiFi.localIP());
 		return 1;
 	}
@@ -78,7 +83,7 @@ void ez_beep(int time)
 			1000,	  // Frequency in hertz(HZ).
 			1000,	  // On Duration in milliseconds(ms).
 			1000,	  // Off Duration in milliseconds(ms).
-			time - 1, // The number of beeps per cycle.
+			time, // The number of beeps per cycle.
 			1000,	  // Pause duration.
 			1		  // The number of cycle.
 		);
@@ -114,18 +119,19 @@ void click(Button2 &btn)
 
 void setup(void)
 {
-	Serial.begin(115200);
-    // 尝试连接WIFI
-    if (connect() == 0)
-    {
-        return;
-    }
 	u8g2.begin();
-	u8g2.enableUTF8Print();						// enable UTF8 support for the Arduino print() function
-	u8g2.setFont(u8g2_font_unifont_t_chinese2); // use chinese2 for all the glyphs of "你好世界"
+	u8g2.enableUTF8Print();
+	u8g2.setFont(u8g2_font_wqy12_t_gb2312);
 	u8g2.setFontDirection(0);
+  u8g2.clearBuffer();
+  u8g2.setCursor(0, 15);
+  u8g2.print(message);
+  u8g2.sendBuffer();
+    // 尝试连接WIFI
+  connect();
 	EasyBuzzer.setPin(beep);
 	ez_beep(3);
+	Serial.begin(115200);
 
 	buttonA.begin(BUTTON_A_PIN);
 	buttonA.setClickHandler(click);
@@ -139,9 +145,10 @@ void setup(void)
 
 void loop(void)
 {
-	u8g2.firstPage();
-	u8g2.setCursor(0, 15);
-	u8g2.print(message);
+  u8g2.clearBuffer();
+  u8g2.setCursor(0, 15);
+  u8g2.print(message);
+  u8g2.sendBuffer();
 	buttonA.loop();
 	buttonB.loop();
 	buttonC.loop();
