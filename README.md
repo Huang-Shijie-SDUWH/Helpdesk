@@ -1,6 +1,12 @@
 # Python 与 Linux 基础教学项目
 
-本项目旨在通过51单片机开发一个独居老人按键求助的家庭求助机，家人可通过企业微信收到求助消息，并可直接通过企业微信进行回复。
+本项目旨在基于ESP32开发一个独居老人按键求助的家庭求助机，家人可通过企业微信收到求助消息，并可直接通过企业微信进行回复。
+
+## 项目框架
+
+![Chart1](https://s2.loli.net/2022/01/28/71I5ryc4kVp2PjG.png)
+
+本项目采用一个 `Websocket` 服务器与单片机通信，一个 `HTTP` 服务器与企业微信端通信，服务器之间提供 `redis` 通信的方法来建立单片机与企业微信之间的双端通信。
 
 ## 服务器端
 
@@ -21,30 +27,25 @@
 
 ![image-20211028001024147](https://i.loli.net/2021/10/28/AmKpVQfvU2SNdOB.png)
 
-其中，`corpid`为企业ID，`corpsecret`为自定义应用Secret，`receive_token`和`AESKey`分别为定义接收消息API时定义的`Token`和`EncodingAESKey`
-
-此代码由纯小白复现起来可能有难度，感到困难的同学可以先听我讲。
+其中， `corpid` 为企业ID， `corpsecret` 为自定义应用Secret， `receive_token` 和 `AESKey` 分别为定义接收消息API时定义的 `Token` 和 `EncodingAESKey` 
 
 ### 技术栈：
 
-* ❤️ 服务 —— Flask，文档见 [Welcome to Flask — Flask Documentation (2.0.x) (palletsprojects.com)](https://flask.palletsprojects.com/en/2.0.x/)
-* ❤️ 部署 —— 基于 screen 部署，文档见 [Screen User’s Manual: Top (gnu.org)](https://www.gnu.org/software/screen/manual/html_node/index.html)
+* ❤️ HTTP服务 —— Flask，文档见 [Flask Documentation (2.0.x)](https://flask.palletsprojects.com/en/2.0.x/) 
+* ❤️ WebSocket服务 —— Websocket-Server，文档见 [Pithikos/python-websocket-server](https://github.com/Pithikos/python-websocket-server) 
+* ❤️ 部署 —— Docker-Compose 部署，文档见 [Docker Documentation](https://docs.docker.com/compose/) 
 
 ### 效果图：
 
-<img src="https://i.loli.net/2021/10/27/8YrXAjFcivwudVf.png" alt="image-20211027230020087" style="zoom:50%;" />
-
-
+![image-20220128212043303](https://s2.loli.net/2022/01/28/Xun6hHbdAM49yW2.png)
 
 ## 硬件端
 
-目前已上传需要用到的esp32操控蜂鸣器，4个按钮分别检测按下，12864液晶显示自定义文字示例代码，用到的库和接口见接口定义，所有代码都已通过测试，IDE采用 [PlatformIO](https://platformio.org/) ，可直接在图形化界面里进行对应库的安装，可自行进行样例测试。
+已实现蜂鸣器以任意频率响任意声，显示屏显示任意消息，按键检测/防抖，websocket收发消息。用到的库和接口见接口定义，所有代码都已通过测试，IDE采用 [PlatformIO](https://platformio.org/) ，可直接在图形化界面里进行对应库的安装，可自行进行样例测试。
 
-![IMG_20211227_210158](https://s2.loli.net/2021/12/27/vMeRJAktQ6pmy83.jpg)
+![image-20220128212006638](https://s2.loli.net/2022/01/28/mtEs1r8ePdIu3GF.png)
 
-
-
-此项目基于Arduino实现，较为简单，建议使用VScode作为IDE复现代码，同学们若想使用此代码，在购买硬件时，注意是否支持Arduino库。
+此项目基于Arduino实现，较为简单，建议使用VScode作为IDE复现代码，若想使用此代码，在购买硬件时，注意是否支持Arduino库。
 
 
 
@@ -52,12 +53,12 @@
 
 🚀 表示已经实现的功能，👷 表示进行中的功能，⏳ 表示规划中的功能，🏹 表示技术方案设计中的功能。
 
-| 功能                                 | 状态      |
-| ------------------------------------ | --------- |
-| 服务器代理企业微信应用与用户双向通信 | 🚀 已实现  |
-| 更详细的代码注释                     | 🚀 已实现  |
-| 在单片机上实现老人求助功能           | ⏳  规划中 |
-| 一些更进一步的功能                   | 🏹 设计中  |
+| 功能                                 | 状态     |
+| ------------------------------------ | -------- |
+| 服务器代理企业微信应用与用户双向通信 | 🚀 已实现 |
+| 更详细的代码注释                     | 🚀 已实现 |
+| 在单片机上实现老人求助功能           | 🚀 已实现 |
+| 一些更进一步的功能                   | ⏳ 规划中 |
 
 ## 使用到的硬件淘宝链接（仅供参考）
 
@@ -70,5 +71,5 @@
 
 ## 关于：
 
-本项目为课程教学项目，仅供教学使用。
+本项目为课程教学项目，若有它用，请遵循开源许可证。
 
