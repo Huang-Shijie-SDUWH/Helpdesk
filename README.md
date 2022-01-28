@@ -4,7 +4,7 @@
 
 ## 项目框架
 
-![Chart1](https://s2.loli.net/2022/01/28/71I5ryc4kVp2PjG.png)
+![image-20220128213530297](https://s2.loli.net/2022/01/28/rkAmadftC2Ljb7c.png)
 
 本项目采用一个 `Websocket` 服务器与单片机通信，一个 `HTTP` 服务器与企业微信端通信，服务器之间提供 `redis` 通信的方法来建立单片机与企业微信之间的双端通信。
 
