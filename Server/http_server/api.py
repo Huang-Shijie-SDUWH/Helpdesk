@@ -12,12 +12,25 @@ AESKey = config["AESKey"]
 
 
 def get_token():
+    """
+    根据官方提供的方法获取token
+
+    返回token
+    """
     res = requests.get(
         "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=%s" % corpid + "&corpsecret=%s" % corpsecret)
     return res.json()['access_token']
 
 
 def send_message_all(message, token):
+    """
+    将此消息发送至全部订阅企业号的用户
+
+    @message: String // 要发送的消息
+    @token: String // 微信api认证token
+    
+    返回发送结果
+    """
     request_body = """{
        "touser" : "@all",
        "msgtype" : "text",
