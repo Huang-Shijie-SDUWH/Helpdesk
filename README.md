@@ -10,6 +10,16 @@
 
 ## 服务器端
 
+### Quick Start
+
+```shell
+git clone https://github.com/Huang-Shijie-SDUWH/Helpdesk.git
+cd Helpdesk/Server
+docker-compose up
+```
+
+记得修改认证信息，域名信息等。
+
 ### 页面间调用关系
 
 在`/`中，有以下文件（仅展示部分）
